@@ -78,10 +78,10 @@
                         email: this.email,
                         password: this.password,
                     });
-                    this.token = response.data.token;
+                    this.token = response.data.Authorization;   
 
                     // Token'i yerel depolamada sakla
-                    localStorage.setItem('authToken', this.token);
+                    localStorage.setItem('Authorization', this.token);
 
                     // Token'ı sakla veya kullanıcıyı yönlendir
                     this.$router.push({ name: 'profile_index' });

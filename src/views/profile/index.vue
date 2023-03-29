@@ -421,14 +421,13 @@
             <div class="col-md-12 grid-margin">
               <div class="card rounded">
 
-
                 <div class="card-body" v-for="info in users" :key="info.id">
                   <h6 class="card-title">suggestions for you</h6>
                   <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
                     <div class="d-flex align-items-center hover-pointer">
-                      <img class="img-xs rounded-circle" src="{{info.image}}" alt="">
+                      <img class="img-xs rounded-circle" :src="`${info.image}`" alt="">
                       <div class="ml-2">
-                        <p>Mike Popescu</p>
+                        <RouterLink :to="'/profile/' + info.id"><p>{{info.name}} {{ info.surname }}</p></RouterLink>
                         <p class="tx-11 text-muted">12 Mutual Friends</p>
                       </div>
                     </div>
@@ -457,26 +456,43 @@
 </template>
 
 <script>
+
   export default {
 
     data() {
       return {
-        users: [],
+        users: {},
       }
     },
 
     mounted() {
+
       axios.get(`${config.apiBase}/profile/index`, {
           headers: {
-            'authToken': `Bearer ${config.token}`
+            'Authorization': `Bearer ${config.token}`
           },
         })
         .then(response => {
-          this.users = response.data;
+          this.users = response.data.data;
+          this.$forceUpdate();
         })
         .catch(error => {
           console.log(error);
         });
     },
   };
+
+
+  /* axios.get(`${config.apiBase}/profile/${this.id}`,{
+        headers: {
+            'Authorization': `Bearer ${config.token}`
+          },
+      })
+        .then(response => {
+          this.data = response.data.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+ */
 </script>
