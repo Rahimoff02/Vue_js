@@ -1,6 +1,7 @@
 <script setup>
     import '../../assets/login.css'
     import axios from 'axios'
+import { RouterLink } from 'vue-router';
 </script>
 
 <template>
@@ -28,10 +29,23 @@
                 <div class="or">OR</div>
             </div>
 
-            <form @submit.prevent="login">
+            <form @submit.prevent="register">
+
+                <div class="loginbox-textbox">
+                    <input type="text" class="form-control" placeholder="Name" v-model="name" autocomplete="on">
+                </div>
+                <div class="loginbox-textbox">
+                    <input type="text" class="form-control" placeholder="Surname" v-model="surname" autocomplete="on">
+                </div>
+
                 <div class="loginbox-textbox">
                     <input type="text" class="form-control" placeholder="Email" v-model="email" autocomplete="on">
                 </div>
+
+                <div class="loginbox-textbox">
+                    <input type="text" class="form-control" placeholder="Phone" v-model="phone" autocomplete="on">
+                </div>
+
                 <div class="loginbox-textbox">
                     <input type="password" class="form-control" placeholder="Password" v-model="password" autocomplete="on">
                 </div>
@@ -42,11 +56,11 @@
                     <a href="">Forgot Password?</a>
                 </div>
                 <div class="loginbox-submit">
-                    <input type="submit" class="btn btn-primary btn-block" value="Login">
+                    <input type="submit" class="btn btn-primary btn-block" value="Register">
                 </div>
 
                 <div class="loginbox-signup">
-                    <RouterLink :to="{ name : 'register'}">Sign Up</RouterLink>
+                    <RouterLink :to="{ name : 'login'}">Sign in</RouterLink>
                 </div>
             </form>
         </div>
@@ -57,39 +71,39 @@
 
 <script>
     export default {
-        data() {
-            return {
-                email: '',
-                password: '',
-                errorMessage: '',
-            };
+    data() {
+        return {
+            name: "",
+            surname: "",
+            phone: "",
+            email: "",
+            password: "",
+            errorMessage: "",
+        };
+    },
+    methods: {
+        async register() {
+            if (!this.email || !this.password) {
+                this.errorMessage = "Email and password are required";
+                return;
+            }
+            try {
+                const response = await axios.post("http://localhost:8000/api/register", {
+                    email: this.email,
+                    password: this.password,
+                    phone: this.phone,
+                    name: this.name,
+                    surname: this.surname,
+                });
+                this.token = response.data.token;
+                // Token'ı sakla veya kullanıcıyı yönlendir
+                this.$router.push({ name: "login" });
+            }
+            catch (error) {
+                console.error(error);
+            }
         },
-        methods: {
-
-            async login() {
-
-                if (!this.email || !this.password) {
-                    this.errorMessage = 'Email and password are required';
-                    return;
-                }
-
-                try {
-                    const response = await axios.post('http://localhost:8000/api/login', {
-                        email: this.email,
-                        password: this.password,
-                    });
-                    this.token = response.data.token;
-
-                    // Token'i yerel depolamada sakla
-                    localStorage.setItem('authToken', this.token);
-
-                    // Token'ı sakla veya kullanıcıyı yönlendir
-                    this.$router.push({ name: 'profile_index' });
-
-                } catch (error) {
-                    console.error(error);
-                }
-            },
-        },
-    };
+    },
+    components: { RouterLink }
+};
 </script>

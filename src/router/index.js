@@ -14,17 +14,39 @@ const router = createRouter({
     {
       path: '/profile/edit',
       name: 'profile_edit',
-      component: () => import('../views/profile/edit.vue')
+      component: () => import('../views/profile/edit.vue'),
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/profile/security',
       name: 'profile_security',
-      component: () => import('../views/profile/security.vue')
+      component: () => import('../views/profile/security.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: () => import('../views/chat.vue'),
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/login',
       name: 'login',
       component: () => import('../views/auth/login.vue'),
+      meta: {
+        requiresAuth: false 
+      }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/auth/register.vue'),
       meta: {
         requiresAuth: false 
       }

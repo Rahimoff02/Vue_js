@@ -1,12 +1,15 @@
 <script setup>
-import { RouterLink } from 'vue-router';
-import '../../assets/profile/index.css'
-
+  import {
+    RouterLink
+  } from 'vue-router';
+  import '../../assets/profile/index.css'
+  import axios from 'axios'
+  import config from '../../config/config'
 </script>
 
 <template>
 
-  <div class="container">
+  <div class="container mt-2">
     <div class="profile-page tx-13">
       <div class="row">
         <div class="col-12 grid-margin">
@@ -409,7 +412,7 @@ import '../../assets/profile/index.css'
                           <img class="img-fluid" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
                         </figure>
                       </div>
-                      
+
                     </div>
                   </div>
                 </div>
@@ -417,13 +420,13 @@ import '../../assets/profile/index.css'
             </div>
             <div class="col-md-12 grid-margin">
               <div class="card rounded">
-                
-                <div class="card-body">
+
+
+                <div class="card-body" v-for="info in users" :key="info.id">
                   <h6 class="card-title">suggestions for you</h6>
                   <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
                     <div class="d-flex align-items-center hover-pointer">
-                      <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar2.png"
-                        alt="">
+                      <img class="img-xs rounded-circle" src="{{info.image}}" alt="">
                       <div class="ml-2">
                         <p>Mike Popescu</p>
                         <p class="tx-11 text-muted">12 Mutual Friends</p>
@@ -440,7 +443,7 @@ import '../../assets/profile/index.css'
                       </svg>
                     </button>
                   </div>
-                  
+
                 </div>
               </div>
             </div>
@@ -450,4 +453,30 @@ import '../../assets/profile/index.css'
       </div>
     </div>
   </div>
+
 </template>
+
+<script>
+  export default {
+
+    data() {
+      return {
+        users: [],
+      }
+    },
+
+    mounted() {
+      axios.get(`${config.apiBase}/profile/index`, {
+          headers: {
+            'authToken': `Bearer ${config.token}`
+          },
+        })
+        .then(response => {
+          this.users = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+  };
+</script>
